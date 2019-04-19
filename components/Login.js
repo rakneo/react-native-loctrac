@@ -35,6 +35,7 @@ export default class Login extends Component{
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         KeyboardType='email-address'
+                        returnKeyType='next'
                         onSubmitEditing={()=> this.refs.textInputPassword.focus()}
                     />
 
