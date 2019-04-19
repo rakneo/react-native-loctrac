@@ -5,6 +5,12 @@ import {StyleSheet, Text, View, Image, TouchableWithoutFeedback,
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { Sae } from 'react-native-textinput-effects';      
 export default class Login extends Component{
+
+    state={
+        username:'',
+        password:''
+    }
+
     render(){
         return(
             <SafeAreaView style={styles.container}>
