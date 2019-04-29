@@ -1,14 +1,55 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, TouchableWithoutFeedback,
-        StatusBar, TextInput, SafeAreaView, Keyboard, TouchableOpacity,
-        KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, Text, View,TouchableWithoutFeedback,
+        StatusBar, SafeAreaView, Keyboard, TouchableOpacity,
+        KeyboardAvoidingView,ActivityIndicator,} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import { Sae } from 'react-native-textinput-effects';      
+import { Sae } from 'react-native-textinput-effects'; 
+import firebase from 'firebase';
+
 export default class Login extends Component{
 
-    state={
-        username:'',
-        password:''
+    constructor(props){
+        super(props);
+        this.state={
+            username:'',
+            password:'',
+            error:'',
+            loading: false
+        }
+
+        this.onLoginPress = this.onLoginPress.bind(this);
+    
+
+    }
+
+ 
+    onLoginPress(){
+        this.setState(
+            {error:'', loading:true}
+        );
+
+        const { email, password } = this.state;
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => { this.setState({ error: '', loading: false }); })
+            .catch(() => {
+                //Login was not successful, let's create a new account
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(() => { this.setState({ error: '', loading: false }); })
+                    .catch(() => {
+                        this.setState({ error: 'Authentication failed.', loading: false });
+                    });
+            });
+
+
+    }
+
+    renderButtonOrSpinner() {
+        if (this.state.loading) {
+            return <ActivityIndicator size="large" color="white" />;    
+        }
+        return  <TouchableOpacity style={styles.buttonContainer} onPress={this.onLoginPress}>
+                    <Text style={styles.buttonText}>SIGN IN</Text>
+                </TouchableOpacity>;
     }
 
     render(){
@@ -35,6 +76,7 @@ export default class Login extends Component{
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         KeyboardType='email-address'
+                        onChangeText ={(text)=>{this.setState({'username':text})}}
                         onSubmitEditing={()=> this.refs.textInputPassword.focus()}
                     />
 
@@ -51,14 +93,13 @@ export default class Login extends Component{
                         // TextInput props
                         autoCapitalize={'none'}
                         autoCorrect={false}
+                        onChangeText={(text)=>{this.setState({'password':text})}}
                         returnKeyType='go'
                         secureTextEntry={true}
                         ref={"textInputPassword"}
                     />
-                    <TouchableOpacity style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>SIGN IN</Text>
-                    </TouchableOpacity>
-
+                   
+                    {this.renderButtonOrSpinner()}
                     
                     </View>
                 </View>
