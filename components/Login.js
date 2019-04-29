@@ -76,11 +76,7 @@ export default class Login extends Component{
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         KeyboardType='email-address'
-<<<<<<< HEAD
                         onChangeText ={(text)=>{this.setState({'username':text})}}
-=======
-                        returnKeyType='next'
->>>>>>> 66fa7da16ec2df0eae56f1723e43f1fa50fab096
                         onSubmitEditing={()=> this.refs.textInputPassword.focus()}
                     />
 
